@@ -19,12 +19,14 @@ using OpenIddict.Validation;
 using OpenIddict.Validation.Internal;
 using OrchardCore.BackgroundTasks;
 using OrchardCore.Data.Migration;
+using OrchardCore.Deployment;
 using OrchardCore.DisplayManagement;
 using OrchardCore.DisplayManagement.Handlers;
 using OrchardCore.Modules;
 using OrchardCore.Navigation;
 using OrchardCore.OpenId.Abstractions.Managers;
 using OrchardCore.OpenId.Configuration;
+using OrchardCore.OpenId.Deployment;
 using OrchardCore.OpenId.Drivers;
 using OrchardCore.OpenId.Handlers;
 using OrchardCore.OpenId.Recipes;
@@ -50,6 +52,11 @@ namespace OrchardCore.OpenId
         {
             services.AddScoped<IPermissionProvider, Permissions>();
             services.AddScoped<INavigationProvider, AdminMenu>();
+
+            // Deployment
+            services.AddTransient<IDeploymentSource, OpenIdDeploymentSource>();
+            services.AddSingleton<IDeploymentStepFactory>(new DeploymentStepFactory<OpenIdDeploymentStep>());
+            services.AddScoped<IDisplayDriver<DeploymentStep>, OpenIdDeploymentStepDriver>();
         }
     }
 
